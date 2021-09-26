@@ -12,6 +12,10 @@ import {
 import * as Storage from "./Storage";
 import { Tarefa } from "../objects/Tarefa";
 import { generateUniqueKey } from "../utils/Utils";
+import { getDBConnection, createTable, insertTable } from "../db/db-service";
+
+const QUERY_CREATE_TABLE = 'CREATE TABLE IF NOT EXISTS task (id VARCHAR(16) PRIMARY KEY NOT NULL, descricao VARCHAR(16), vibrar INTEGER)';
+const QUERY_INSERT = 'INSERT INTO task (id, descricao, vibrar) VALUES ( ?, ?, ?)';
 
 export default function NovaTaskScreen({ navigation }) {
   const [descricao, setDescricao] = useState();
@@ -19,26 +23,15 @@ export default function NovaTaskScreen({ navigation }) {
   const toggleSwitch = () => setVibrar(previousState => !previousState);
 
   async function salvarTask() {
-    let tarefas = await Storage.getData("@tarefas");
-    console.log(tarefas);
-
     const tarefa = {
       id: generateUniqueKey(),
       descricao: descricao,
       vibrar: vibrar,
     };
+    const db = await getDBConnection();
+    await createTable(db, QUERY_CREATE_TABLE);
     console.log(tarefa);
-
-    if (tarefas != null) {
-        tarefas.push(tarefa);
-    } else {
-        tarefas = [];
-        tarefas.push(tarefa);
-    }
-
-    console.log(tarefas);
-
-    Storage.storeData("@tarefas", tarefas);
+    await insertTable(db, QUERY_INSERT, [tarefa.id, tarefa.descricao, tarefa.vibrar ? 1 : 0]);
     navigation.navigate("Tasks");
   }
 
