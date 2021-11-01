@@ -8,9 +8,10 @@ import {
   Button,
   ScrollView,
 } from "react-native";
-import * as Storage from "./Storage";
+import * as Storage from "../storage/Storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { getDBConnection, createTable, selectQuery } from "../db/db-service";
+import Styles from '../Styles';
 
 const QUERY_CREATE_TABLE =
   "CREATE TABLE IF NOT EXISTS task (id VARCHAR(16) PRIMARY KEY NOT NULL, descricao VARCHAR(16), vibrar INTEGER)";
@@ -49,10 +50,9 @@ export default function TaskScreen({ navigation }) {
           <Text>{tarefa.vibrar ? "🔔" : ""}</Text>
         </View>
       ))} */}
-      <ScrollView removeClippedSubviews={false}>
-        <View>
+      {/* <ScrollView removeClippedSubviews={false}> */}
+        {/* <View> */}
           <FlatList
-            nestedScrollEnabled
             data={tarefas}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => {
@@ -63,15 +63,15 @@ export default function TaskScreen({ navigation }) {
               );
             }}
           />
-        </View>
-      </ScrollView>
+        {/* </View> */}
+      {/* </ScrollView> */}
 
-      <Button
+      {/* <Button
         onPress={() => navigation.navigate("NewTask")}
         title="Nova Task"
         color="#841584"
         accessibilityLabel="Clique para add uma nova task!"
-      />
+      /> */}
     </View>
   );
 }
@@ -79,7 +79,7 @@ export default function TaskScreen({ navigation }) {
 const styles = StyleSheet.create({
   item: {
     alignItems: "center",
-    backgroundColor: "#dcda48",
+    backgroundColor: Styles.primaryColor,
     flexGrow: 1,
     margin: 4,
     padding: 20,

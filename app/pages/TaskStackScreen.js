@@ -11,7 +11,7 @@ export default function TaskStackScreen() {
   return (
     <HomeStack.Navigator
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
       }}
     >
       <HomeStack.Screen
@@ -19,9 +19,6 @@ export default function TaskStackScreen() {
         component={TaskScreen}
         options={{
           title: 'TAREFAS',
-          headerStyle: {
-            backgroundColor: Styles.backgroundColor
-          },
           headerTintColor: '#fff',
           headerTitleStyle: {
             fontWeight: 'bold',

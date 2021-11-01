@@ -9,16 +9,18 @@ import {
   StyleSheet,
   Switch
 } from "react-native";
-import * as Storage from "./Storage";
+import * as Storage from "../storage/Storage";
 import { Tarefa } from "../objects/Tarefa";
 import { generateUniqueKey } from "../utils/Utils";
 import { getDBConnection, createTable, insertTable } from "../db/db-service";
+import { useNavigation } from "@react-navigation/core";
 
 const QUERY_CREATE_TABLE = 'CREATE TABLE IF NOT EXISTS task (id VARCHAR(16) PRIMARY KEY NOT NULL, descricao VARCHAR(16), vibrar INTEGER)';
 const QUERY_INSERT = 'INSERT INTO task (id, descricao, vibrar) VALUES ( ?, ?, ?)';
 
-export default function NovaTaskScreen({ navigation }) {
-  const [descricao, setDescricao] = useState();
+export default function NovaTaskScreen() {
+  const navigation = useNavigation();
+  const [descricao, setDescricao] = useState(null);
   const [vibrar, setVibrar] = useState(false);  
   const toggleSwitch = () => setVibrar(previousState => !previousState);
 
@@ -32,7 +34,9 @@ export default function NovaTaskScreen({ navigation }) {
     await createTable(db, QUERY_CREATE_TABLE);
     console.log(tarefa);
     await insertTable(db, QUERY_INSERT, [tarefa.id, tarefa.descricao, tarefa.vibrar ? 1 : 0]);
-    navigation.navigate("Tasks");
+    setDescricao(null);
+    setVibrar(false);
+    navigation.navigate("TaskStack");
   }
 
   return (
